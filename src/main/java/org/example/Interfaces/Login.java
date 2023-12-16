@@ -8,13 +8,15 @@ import java.sql.SQLException;
 public class Login extends javax.swing.JFrame {
 
     User user = new User();
+    public static User user_logged_in = new User();
+
 
     // Variables declaration - do not modify
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private static javax.swing.JTextField jTextField1;
-    private static javax.swing.JTextField jTextField2;
+    private static javax.swing.JPasswordField jTextField2;
     // End of variables declaration
     /**
      * Creates new form Login
@@ -37,10 +39,10 @@ public class Login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
+        setTitle("Login");
         jButton1.setText("Login");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -53,7 +55,6 @@ public class Login extends javax.swing.JFrame {
         });
 
         jLabel1.setText("Nom d'utilisateur");
-
         jLabel2.setText("Mot de passe");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -93,12 +94,23 @@ public class Login extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
+
     }// </editor-fold>
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
-        // TODO add your handling code here:
-        user.login(jTextField1.getText(),jTextField2.getText());
+        //TODO handle the login process here:
+        boolean login = user.login(jTextField1.getText(),jTextField2.getText());
+        if (login){
+            //get the current logged-in user so that it can be shared in other classes using Login.user_logged_in
+            user_logged_in = user_logged_in.get_info(jTextField1.getText(),jTextField2.getText());
+            MDIParent gestion = new MDIParent();
+            gestion.setVisible(true);
 
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Login failed");
+        }
     }
 
     /**

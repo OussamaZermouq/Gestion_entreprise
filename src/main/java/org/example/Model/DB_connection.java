@@ -23,6 +23,7 @@ public class DB_connection {
             return connection;
         }
         public ResultSet execute_query(String query){
+            connect_to_db();
             PreparedStatement preparedStatement = null;
             ResultSet resultSet = null;
             try{
@@ -37,12 +38,5 @@ public class DB_connection {
             return null;
         }
 
-        public static void main(String[] args) throws SQLException {
-            DB_connection db  = new DB_connection();
-            String sql = "Select count(*) as c from Products";
-            db.connect_to_db();
-            ResultSet re = db.execute_query(sql);
-            System.out.println(re.getInt("c"));
-        }
 
 }

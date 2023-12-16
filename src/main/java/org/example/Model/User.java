@@ -6,34 +6,62 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class User {
+    public int id;
     public String name;
     public String last_name;
     public int age;
     public String email;
     public String username;
     public String password;
-    public DB_connection db_connection;
+
+
+    //database connection to be used in functions
+    DB_connection db = new DB_connection();
+
 
     public User(){
 
     }
 
-    public User(String username, String password, String name, String last_name, String email, int age, DB_connection db_connection) {
-        this.username = username;
-        this.password = password;
+    public User(int id,String name, String last_name, String email, int age, String username, String password) {
+        this.id = id;
         this.name = name;
         this.last_name = last_name;
         this.email = email;
         this.age = age;
-        this.db_connection = db_connection;
+        this.username = username;
+        this.password = password;
     }
 
     public boolean login(String username, String password) throws SQLException {
-        DB_connection db = new DB_connection();
-        ResultSet login_result = db.execute_query("select count(*) as user_count from users where username = "+username+" and password = "+password);
-        System.out.println(login_result.getInt("user_count"));
 
+        String user = '"'+username+'"';
+        String pass = '"'+password+'"';
+        String sql = "select count(*) as user_count from users where username = "+user+" and password ="+pass;
+        ResultSet login_result = db.execute_query(sql);
+        if (login_result.getInt("user_count")==1){
+            System.out.println("Successful login");
+            return true;
+        }
         return false;
 
+    }
+
+    public User get_info(String username, String password) throws SQLException {
+        User user_logged = null;
+        String user = '"'+username+'"';
+        String pass = '"'+password+'"';
+        if (login(username, password)){
+            String sql_success_check = "select * from users where username = "+user+" and password ="+pass;
+            ResultSet user_info = db.execute_query(sql_success_check);
+            user_logged = new User(user_info.getInt("id"),
+                    user_info.getString("name"),
+                    user_info.getString("last_name"),
+                    user_info.getString("email") ,
+                    user_info.getInt("age"),
+                    user_info.getString("username"),
+                    user_info.getString("password"));
+        }
+        return user_logged;
     }
 }
