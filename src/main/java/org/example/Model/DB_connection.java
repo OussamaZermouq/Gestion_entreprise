@@ -23,7 +23,7 @@ public class DB_connection {
             return connection;
         }
         public ResultSet execute_query(String query){
-            connect_to_db();
+            connection = connect_to_db();
             PreparedStatement preparedStatement = null;
             ResultSet resultSet = null;
             try{
@@ -37,6 +37,4 @@ public class DB_connection {
             }
             return null;
         }
-
-
 }

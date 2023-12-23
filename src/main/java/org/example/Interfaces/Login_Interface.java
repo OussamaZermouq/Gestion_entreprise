@@ -5,7 +5,7 @@ import org.example.Model.User;
 import javax.swing.*;
 import java.sql.SQLException;
 
-public class Login extends javax.swing.JFrame {
+public class Login_Interface extends javax.swing.JFrame {
 
     User user = new User();
     public static User user_logged_in = new User();
@@ -21,7 +21,7 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    public Login() {
+    public Login_Interface() {
         initComponents();
     }
 
@@ -95,7 +95,6 @@ public class Login extends javax.swing.JFrame {
 
         pack();
         setLocationRelativeTo(null);
-
     }// </editor-fold>
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
@@ -127,14 +126,14 @@ public class Login extends javax.swing.JFrame {
             }
         } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException |
                  IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login_Interface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login().setVisible(true);
+                new Login_Interface().setVisible(true);
             }
         });
     }

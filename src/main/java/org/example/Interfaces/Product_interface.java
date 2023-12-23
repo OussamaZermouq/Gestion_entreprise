@@ -1,13 +1,33 @@
 package org.example.Interfaces;
 
+import org.example.Model.DB_connection;
+import org.example.Model.Product;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Product_interface extends JFrame {
+
+    public static DB_connection db_connection = new DB_connection();
+    public static ArrayList<Product> products;
+
+    //Au demarrage on doit remplire la liste de produits
+    static {
+        try {
+            products = Product.get_all_products(db_connection);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     /**
      * Creates new form Product_interface
      */
-    public Product_interface() {
+    public Product_interface() throws SQLException {
         initComponents();
     }
 
@@ -18,7 +38,7 @@ public class Product_interface extends JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
+    private void initComponents() throws SQLException {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -36,6 +56,7 @@ public class Product_interface extends JFrame {
         jButton6 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        jTable2.setModel(remplir_jtable());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,37 +72,49 @@ public class Product_interface extends JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel4.setText("Prix : ");
 
-        jTextField1.setText("jTextField1");
+        jTextField1.setText("");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
             }
         });
 
-        jTextField2.setText("jTextField1");
+        jTextField2.setText("");
 
-        jTextField3.setText("jTextField1");
+        jTextField3.setText("");
 
-        jTextField4.setText("jTextField1");
+        jTextField4.setText("");
 
         jButton1.setText("Supprimer");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                try {
+                    jButton1ActionPerformed(evt);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
         jButton2.setText("Ajouter");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                try {
+                    jButton2ActionPerformed(evt);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
         jButton3.setText("Modifier");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                try {
+                    jButton3ActionPerformed(evt);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -197,16 +230,23 @@ public class Product_interface extends JFrame {
         // TODO add your handling code here:
     }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         // TODO add your handling code here:
+        supprimer_produit(jTextField1.getText());
     }
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+        // TODO add your handling code here (Ajouter):
+        ajouter_produit(jTextField1.getText(),jTextField3.getText(),
+                Double.parseDouble(jTextField4.getText()),jTextField2.getText());
+
     }
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         // TODO add your handling code here:
+        modifier_produit(jTextField1.getText(),jTextField3.getText(),
+                Double.parseDouble(jTextField4.getText()),jTextField2.getText());
+
     }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -232,9 +272,9 @@ public class Product_interface extends JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                System.out.println(info.getName());
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
                 }
             }
         } catch (ClassNotFoundException ex) {
@@ -251,7 +291,16 @@ public class Product_interface extends JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Product_interface().setVisible(true);
+                try {
+                    new Product_interface().setVisible(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    remplir_jtable();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
@@ -269,6 +318,7 @@ public class Product_interface extends JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
+
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
@@ -276,14 +326,86 @@ public class Product_interface extends JFrame {
     // End of variables declaration
 
 
-    //own function
+    //our functions
 
-    public void remplir_jtable(){
+    public static DefaultTableModel remplir_jtable() throws SQLException {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Id");
         model.addColumn("Libelle");
         model.addColumn("Prix");
         model.addColumn("Description");
 
+        for (Product p : products){
+            model.addRow(new Object[]{p.id,p.libelle,p.prix+"DH",p.description});
+        }
+        return model;
     }
+
+    public void ajouter_produit(String id, String libelle, double prix, String description) throws SQLException {
+        int count = db_connection.execute_query("Select count(*) as count from products where id="+id).getInt("count");
+        if (count == 0){
+            Product produit= new Product(id, libelle, prix, description);
+            //All the actions are being done locally, but when pressing the "Enregistrer" button it will be saved to the database.
+            products.add(produit);
+            jTable2.setModel(remplir_jtable());
+
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Cette id existe deja.");
+            return;
+        }
+    }
+
+    public int find_product_in_list(String id){
+        for (int i=0;i<products.size();i++){
+            if (products.get(i).id.equals(id)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void modifier_produit(String id, String libelle, double prix, String description) throws SQLException{
+        if (find_product_in_list(id)>-1){
+            products.set(find_product_in_list(id), new Product(id, libelle,prix,description));
+
+            jTable2.setModel(remplir_jtable());
+            JOptionPane.showMessageDialog(null, "Produit modifier!");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Cette id n'existe pas!");
+
+        }
+    }
+
+    public void supprimer_produit(String id) throws SQLException{
+        if (find_product_in_list(id)>-1){
+            products.remove(find_product_in_list(id));
+            jTable2.setModel(remplir_jtable());
+            JOptionPane.showMessageDialog(null, "Produit supprimer!");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Cette id n'existe pas!");
+        }
+    }
+
+    public void enregistrer_sur_base_donnee(ArrayList<Product> produits) throws SQLException {
+        //we call this function so that we can save the current data to the database, this is used so that the application doesnt communicate with the DB too many times.
+        //this function is called when pressing the "Enregistrer" button
+
+        ArrayList<Product> products_in_db = Product.get_all_products(db_connection);
+
+        boolean allMatch = produits.stream().allMatch(products_in_db::contains) && products_in_db.stream().allMatch(produits::contains);
+        if (allMatch){
+            JOptionPane.showMessageDialog(null, "Aucune modification a faire.");
+            return;
+        }
+        for (Product p : produits){
+
+            String query = "";
+            db_connection.execute_query(query);
+        }
+
+    }
+
 }

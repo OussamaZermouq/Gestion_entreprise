@@ -11,12 +11,6 @@ public class Product {
 
     public String description;
 
-    public Product(String id, String libelle, double prix, String description) {
-        this.id = id;
-        this.libelle = libelle;
-        this.prix = prix;
-        this.description = description;
-    }
 
     public String getId() {
         return id;
@@ -49,6 +43,12 @@ public class Product {
     public void setDescription(String description) {
         this.description = description;
     }
+    public Product(String id, String libelle, double prix, String description) {
+        this.id = id;
+        this.libelle = libelle;
+        this.prix = prix;
+        this.description = description;
+    }
 
     public boolean ajouter_produit(Product product_to_add,DB_connection connection){
         String query= "Insert into products values('"+product_to_add.id+"','"+product_to_add.libelle+"','"+product_to_add.prix+"','"+product_to_add.description+"',)";
@@ -63,13 +63,23 @@ public class Product {
         return true;
     }
 
-    public ArrayList<Product> get_all_products(DB_connection connection) throws SQLException {
+    public static ArrayList<Product> get_all_products(DB_connection connection) throws SQLException {
         ArrayList<Product> products = new ArrayList<Product>();
+        int count = connection.execute_query("Select count(*) as number_of_products from Products").getInt("number_of_products");
         ResultSet resultSet = connection.execute_query("Select * from Products");
+        for (int i=0;i<count;i++){
+            products.add(new Product(resultSet.getString("id"),
+                                    resultSet.getString("libelle"),
+                                    resultSet.getDouble("price"),
+                                    resultSet.getString("description")));
+            resultSet.next();
+        }
+        return products;
+
     }
 
     public static void main(String[] args) throws SQLException {
-        Product p1 = new Product("ID_1","Produit 1",200.00,"Desc 1");
+
 
     }
 }

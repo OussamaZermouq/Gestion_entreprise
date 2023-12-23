@@ -1,9 +1,6 @@
 package org.example.Interfaces;
 
-import org.example.Model.User;
-
 import javax.swing.*;
-import java.awt.*;
 
 public class MDIParent extends JFrame {
 
@@ -63,11 +60,8 @@ public class MDIParent extends JFrame {
                         .addGap(0, 463, Short.MAX_VALUE)
         );
         pack();
-
-
         setLocationRelativeTo(null);
-
-        setTitle("Gestion d'entreprise [Session : "+Login.user_logged_in.name+"]");
+        setTitle("Gestion d'entreprise [Session : "+ Login_Interface.user_logged_in.name+"]");
     }
     public static void main(String args[]) {
         try {
