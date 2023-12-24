@@ -9,7 +9,7 @@ public class DB_connection {
 
         public String user = "root";
         public String password = "";
-        java.sql.Connection connection = null;
+        public java.sql.Connection connection = null;
         public Connection connect_to_db(){
             try{
                 connection = DriverManager.getConnection(url+":"+port+"/"+db_name, user, password);
@@ -36,5 +36,18 @@ public class DB_connection {
                 System.err.println(e.getMessage());
             }
             return null;
+        }
+        public int execute_query_UD(String query){
+            connection = connect_to_db();
+            PreparedStatement preparedStatement = null;
+            ResultSet resultSet = null;
+            try{
+                preparedStatement = connection.prepareStatement(query);
+                return preparedStatement.executeUpdate();
+            }
+            catch (SQLException e){
+                System.err.println(e.getMessage());
+            }
+            return 0;
         }
 }

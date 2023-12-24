@@ -12,16 +12,7 @@ import java.util.ArrayList;
 public class Product_interface extends JFrame {
 
     public static DB_connection db_connection = new DB_connection();
-    public static ArrayList<Product> products;
-
-    //Au demarrage on doit remplire la liste de produits
-    static {
-        try {
-            products = Product.get_all_products(db_connection);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    public static ArrayList<Product> products = remplir_list();
 
 
     /**
@@ -272,7 +263,6 @@ public class Product_interface extends JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                System.out.println(info.getName());
                 if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                 }
@@ -341,14 +331,15 @@ public class Product_interface extends JFrame {
         return model;
     }
 
-    public void ajouter_produit(String id, String libelle, double prix, String description) throws SQLException {
+    public void ajouter_produit(String id, String libelle, Double prix, String description) throws SQLException {
         int count = db_connection.execute_query("Select count(*) as count from products where id="+id).getInt("count");
-        if (count == 0){
+        if (count == 0 && (!id.equals("") && !prix.isNaN())){
             Product produit= new Product(id, libelle, prix, description);
-            //All the actions are being done locally, but when pressing the "Enregistrer" button it will be saved to the database.
             products.add(produit);
+            String query = "Insert into Products values("+produit.id+", '"+produit.libelle+"',"+produit.prix+",'"+produit.description+"')";
+            db_connection.execute_query_UD(query);
             jTable2.setModel(remplir_jtable());
-
+            JOptionPane.showMessageDialog(null, "Produit ajouter!");
         }
         else{
             JOptionPane.showMessageDialog(null, "Cette id existe deja.");
@@ -356,6 +347,8 @@ public class Product_interface extends JFrame {
         }
     }
 
+
+    //peut etre utuliser pour la recherche
     public int find_product_in_list(String id){
         for (int i=0;i<products.size();i++){
             if (products.get(i).id.equals(id)) {
@@ -366,46 +359,50 @@ public class Product_interface extends JFrame {
     }
 
     public void modifier_produit(String id, String libelle, double prix, String description) throws SQLException{
+        for (Product p: products){
+            System.out.println(p.id);
+        }
         if (find_product_in_list(id)>-1){
-            products.set(find_product_in_list(id), new Product(id, libelle,prix,description));
-
+            Product produit_mod = new Product(id, libelle,prix,description);
+            //replace the new product in the products list using the index of the found product
+            products.set(find_product_in_list(id), produit_mod);
+            String query = "Insert into Products values("+produit_mod.id+", '"+produit_mod.libelle+"',"+produit_mod.prix+",'"+produit_mod.description+"')";
+            products=Product.get_all_products(db_connection);
+            db_connection.execute_query(query);
             jTable2.setModel(remplir_jtable());
             JOptionPane.showMessageDialog(null, "Produit modifier!");
         }
         else{
             JOptionPane.showMessageDialog(null, "Cette id n'existe pas!");
-
         }
     }
 
     public void supprimer_produit(String id) throws SQLException{
         if (find_product_in_list(id)>-1){
-            products.remove(find_product_in_list(id));
-            jTable2.setModel(remplir_jtable());
-            JOptionPane.showMessageDialog(null, "Produit supprimer!");
+            String query = "Delete from products where id='"+id+"'";
+            int out = db_connection.execute_query_UD(query);
+            if (out >0){
+                products.remove(find_product_in_list(id));
+                products=Product.get_all_products(db_connection);
+                jTable2.setModel(remplir_jtable());
+                JOptionPane.showMessageDialog(null, "Produit supprimer!");
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Aucun produit n'a ete supprimer!");
+            }
         }
         else{
             JOptionPane.showMessageDialog(null, "Cette id n'existe pas!");
         }
     }
 
-    public void enregistrer_sur_base_donnee(ArrayList<Product> produits) throws SQLException {
-        //we call this function so that we can save the current data to the database, this is used so that the application doesnt communicate with the DB too many times.
-        //this function is called when pressing the "Enregistrer" button
-
-        ArrayList<Product> products_in_db = Product.get_all_products(db_connection);
-
-        boolean allMatch = produits.stream().allMatch(products_in_db::contains) && products_in_db.stream().allMatch(produits::contains);
-        if (allMatch){
-            JOptionPane.showMessageDialog(null, "Aucune modification a faire.");
-            return;
+    public static ArrayList<Product> remplir_list(){
+        try {
+            products = Product.get_all_products(db_connection);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        for (Product p : produits){
-
-            String query = "";
-            db_connection.execute_query(query);
-        }
-
+        return products;
     }
 
 }
