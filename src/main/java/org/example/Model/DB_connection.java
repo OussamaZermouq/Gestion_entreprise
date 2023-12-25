@@ -9,11 +9,11 @@ public class DB_connection {
 
         public String user = "root";
         public String password = "";
-        public java.sql.Connection connection = null;
+        public static java.sql.Connection connection = null;
         public Connection connect_to_db(){
             try{
                 connection = DriverManager.getConnection(url+":"+port+"/"+db_name, user, password);
-
+                System.out.println("Connected to DB!");
                 return connection;
 
             } catch (SQLException e) {
@@ -50,4 +50,9 @@ public class DB_connection {
             }
             return 0;
         }
+
+    public static void main(String[] args) {
+        DB_connection conn = new DB_connection();
+        conn.connect_to_db();
+    }
 }

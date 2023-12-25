@@ -2,12 +2,17 @@ package org.example.Interfaces;
 
 import org.example.Model.DB_connection;
 import org.example.Model.Product;
+import org.example.Helper.PrinterHelper;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.print.PrinterJob;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import static org.example.Model.Product.export_pdf;
 
 public class Product_interface extends JFrame {
 
@@ -246,10 +251,13 @@ public class Product_interface extends JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        PrinterHelper.printTable(jTable2);
+
     }
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        exporter_data();
     }
 
     /**
@@ -267,13 +275,8 @@ public class Product_interface extends JFrame {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Product_interface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Product_interface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Product_interface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Product_interface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
@@ -396,12 +399,27 @@ public class Product_interface extends JFrame {
         }
     }
 
+    public void exporter_data(){
+
+        JFrame parentComponent = new JFrame();
+        JFileChooser fileChooser= new JFileChooser();
+        // Some init code, if you need one, like setting title
+        int returnVal = fileChooser.showOpenDialog(parentComponent);
+        //ask the user for an input in a little message box
+        if ( returnVal == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            export_pdf(fileToSave,"test","testtitre",products);
+        }
+
+    }
     public static ArrayList<Product> remplir_list(){
         try {
             products = Product.get_all_products(db_connection);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+
         return products;
     }
 

@@ -1,5 +1,17 @@
 package org.example.Model;
 
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.HorizontalAlignment;
+import org.example.Interfaces.Product_interface;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -77,9 +89,53 @@ public class Product {
         return products;
 
     }
+    public static  void export_pdf(File file, String author, String title, ArrayList<Product> data){
+        // Output PDF file
 
+        try {
+
+            PdfWriter writer = new PdfWriter(file);
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            Document document = new Document(pdfDocument);
+
+            // Set metadata
+            pdfDocument.getDocumentInfo().setAuthor(author);
+            pdfDocument.getDocumentInfo().setTitle(title);
+
+            document.add(new Paragraph(title));
+            System.out.println("PDF with metadata generated successfully.");
+
+            // Create a table with three columns
+            Table table = new Table(4);
+
+            // Add header cells
+            table.addHeaderCell(new Cell().add(new Paragraph("id")));
+            table.addHeaderCell(new Cell().add(new Paragraph("Libelle")));
+            table.addHeaderCell(new Cell().add(new Paragraph("Prix")));
+            table.addHeaderCell(new Cell().add(new Paragraph("Description")));
+
+
+
+            data.forEach(
+                    d->{
+                        table.addCell(new Cell().add(new Paragraph(d.id)));
+                        table.addCell(new Cell().add(new Paragraph(d.libelle)));
+                        table.addCell(new Cell().add(new Paragraph(String.valueOf(d.prix)+"DH")));
+                        table.addCell(new Cell().add(new Paragraph(d.description)));
+
+                    }
+            );
+            table.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+            document.add(table);
+            // Close the document
+            document.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) throws SQLException {
-
 
     }
 }
