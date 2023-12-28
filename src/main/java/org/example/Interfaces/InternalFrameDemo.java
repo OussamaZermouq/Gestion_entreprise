@@ -10,7 +10,7 @@ import java.sql.SQLException;
  *   InternalFrameDemo.java
  */
 public class InternalFrameDemo extends JFrame{
-    private JDesktopPane desktopPane;
+    private final JDesktopPane desktopPane;
 
     public InternalFrameDemo() {
         setTitle("JInternalFrame Example");
@@ -44,7 +44,7 @@ public class InternalFrameDemo extends JFrame{
 
     private void createInternalFrame() {
         JInternalFrame internalFrame = new JInternalFrame("Internal Frame", true, true, true, true);
-        internalFrame.setSize(300, 200);
+        internalFrame.setSize(300, 1000);
         internalFrame.setLocation(50, 50);
 
         // Add some content to the internal frame

@@ -5,11 +5,11 @@ import org.example.Model.Product;
 import org.example.Helper.PrinterHelper;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.print.PrinterJob;
 import java.io.File;
 import java.sql.SQLException;
@@ -17,11 +17,11 @@ import java.util.ArrayList;
 
 import static org.example.Model.Product.export_pdf;
 
-public class Product_interface extends JFrame {
+public class Product_interface extends JInternalFrame implements WindowListener {
 
     public static DB_connection db_connection = new DB_connection();
     public static ArrayList<Product> products = remplir_list();
-
+    public static boolean closed;
 
     /**
      * Creates new form Product_interface
@@ -63,7 +63,6 @@ public class Product_interface extends JFrame {
         jTable2.setModel(remplir_jtable());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(158, 42, 43));
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
@@ -351,9 +350,18 @@ public class Product_interface extends JFrame {
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
         );
+        isMaximizable();
+        isClosable();
 
         pack();
-        setLocationRelativeTo(null);
+
+        //own modifications
+        BasicInternalFrameUI ui = (BasicInternalFrameUI)getUI();
+        Container north = (Container)ui.getNorthPane();
+        north.remove(0);
+        north.validate();
+        north.repaint();
+
     }// </editor-fold>
 
     private void jTextField2ActionPerformed(ActionEvent evt) {
@@ -570,4 +578,38 @@ public class Product_interface extends JFrame {
         return products;
     }
 
+    @Override
+    public void windowOpened(WindowEvent e) {
+        closed = false;
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        closed = true;
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
+    }
 }
