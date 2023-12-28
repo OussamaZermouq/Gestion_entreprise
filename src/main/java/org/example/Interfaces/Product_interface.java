@@ -15,6 +15,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static org.example.Interfaces.MDIParent.jMenuItem1;
 import static org.example.Model.Product.export_pdf;
 
 public class Product_interface extends JInternalFrame implements WindowListener {
@@ -27,6 +28,7 @@ public class Product_interface extends JInternalFrame implements WindowListener 
      * Creates new form Product_interface
      */
     public Product_interface() throws SQLException {
+
         initComponents();
     }
 
@@ -38,7 +40,6 @@ public class Product_interface extends JInternalFrame implements WindowListener 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() throws SQLException {
-
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -62,7 +63,7 @@ public class Product_interface extends JInternalFrame implements WindowListener 
         jButton6 = new javax.swing.JButton();
         jTable2.setModel(remplir_jtable());
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(158, 42, 43));
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
@@ -350,9 +351,8 @@ public class Product_interface extends JInternalFrame implements WindowListener 
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        isMaximizable();
-        isClosable();
 
+        setClosable(true);
         pack();
 
         //own modifications
@@ -580,7 +580,8 @@ public class Product_interface extends JInternalFrame implements WindowListener 
 
     @Override
     public void windowOpened(WindowEvent e) {
-        closed = false;
+        jMenuItem1.setEnabled(false);
+
     }
 
     @Override
@@ -590,7 +591,8 @@ public class Product_interface extends JInternalFrame implements WindowListener 
 
     @Override
     public void windowClosed(WindowEvent e) {
-        closed = true;
+        jMenuItem1.setEnabled(true);
+
     }
 
     @Override

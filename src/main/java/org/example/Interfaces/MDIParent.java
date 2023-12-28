@@ -157,7 +157,6 @@ public class MDIParent extends javax.swing.JFrame {
         productInterface.setVisible(true);
         jDesktopPane1.add(productInterface);
 
-        jMenuItem1.setEnabled(productInterface.closed);
     }
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,7 +208,7 @@ public class MDIParent extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
+    public static javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
