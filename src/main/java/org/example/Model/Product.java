@@ -81,7 +81,7 @@ public class Product {
         ArrayList<Stock> stock_list = Stock.get_all_stocks(connection);
         Stock stock_prod = null;
         for (int i=0;i<count;i++){
-            //search for the correct stock
+            //search for the correct stock and use in the product constructor
             for (Stock s:stock_list){
                 if (s.id_stock == resultSet.getInt("stock_id")){
                     stock_prod = s;

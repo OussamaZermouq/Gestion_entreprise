@@ -138,6 +138,8 @@ public class MDIParent extends javax.swing.JFrame {
         );
 
         pack();
+        //own functions
+        
     }// </editor-fold>
 
     private void jMenuItem3ActionPerformed(ActionEvent evt) {
