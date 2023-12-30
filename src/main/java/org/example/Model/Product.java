@@ -11,7 +11,7 @@ import org.example.Interfaces.Product_interface;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Array;
+import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,9 +23,19 @@ public class Product {
 
     public String description;
 
+    //Since each product is in a stock
+    public Stock stock;
 
     public String getId() {
         return id;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
     }
 
     public void setId(String id) {
@@ -55,35 +65,34 @@ public class Product {
     public void setDescription(String description) {
         this.description = description;
     }
-    public Product(String id, String libelle, double prix, String description) {
+
+    public Product(String id, String libelle, double prix, String description, Stock stock) {
         this.id = id;
         this.libelle = libelle;
         this.prix = prix;
         this.description = description;
-    }
-
-    public boolean ajouter_produit(Product product_to_add,DB_connection connection){
-        String query= "Insert into products values('"+product_to_add.id+"','"+product_to_add.libelle+"','"+product_to_add.prix+"','"+product_to_add.description+"',)";
-        try{
-            connection.execute_query(query);
-        }
-        catch (Exception e){
-            System.err.println(e.getMessage());
-            return false;
-
-        }
-        return true;
+        this.stock = stock;
     }
 
     public static ArrayList<Product> get_all_products(DB_connection connection) throws SQLException {
         ArrayList<Product> products = new ArrayList<Product>();
         int count = connection.execute_query("Select count(*) as number_of_products from Products").getInt("number_of_products");
         ResultSet resultSet = connection.execute_query("Select * from Products");
+        ArrayList<Stock> stock_list = Stock.get_all_stocks(connection);
+        Stock stock_prod = null;
         for (int i=0;i<count;i++){
+            //search for the correct stock
+            for (Stock s:stock_list){
+                if (s.id_stock == resultSet.getInt("stock_id")){
+                    stock_prod = s;
+                    break;
+                }
+            }
             products.add(new Product(resultSet.getString("id"),
                                     resultSet.getString("libelle"),
                                     resultSet.getDouble("price"),
-                                    resultSet.getString("description")));
+                                    resultSet.getString("description"),
+                                    stock_prod));
             resultSet.next();
         }
         return products;

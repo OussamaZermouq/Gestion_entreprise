@@ -2,6 +2,8 @@ package org.example.Interfaces;
 
 import com.itextpdf.commons.actions.data.ProductData;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 public class MDIParent extends javax.swing.JFrame {
@@ -79,6 +81,12 @@ public class MDIParent extends javax.swing.JFrame {
                 }
             }
         });
+
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
@@ -131,6 +139,14 @@ public class MDIParent extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>
+
+    private void jMenuItem3ActionPerformed(ActionEvent evt) {
+
+        Stock_interface stockInterface = new Stock_interface();
+        stockInterface.setVisible(true);
+        jDesktopPane1.add(stockInterface);
+
+    }
 
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
