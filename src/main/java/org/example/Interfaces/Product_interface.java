@@ -13,7 +13,10 @@ import java.awt.event.*;
 import java.awt.print.PrinterJob;
 import java.io.File;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Objects;
 
 import static org.example.Interfaces.MDIParent.jMenuItem1;
 import static org.example.Model.Product.export_pdf;
@@ -198,6 +201,16 @@ public class Product_interface extends JInternalFrame implements WindowListener 
                 jButton6ActionPerformed(e);
             }
         });
+        jButton7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    jButton7ActionPerformed(e);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
         jButton7.setBackground(new java.awt.Color(158, 42, 43));
         jButton7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton7.setForeground(new java.awt.Color(255, 243, 176));
@@ -364,6 +377,10 @@ public class Product_interface extends JInternalFrame implements WindowListener 
 
     }// </editor-fold>
 
+    private void jButton7ActionPerformed(ActionEvent e) throws SQLException {
+        chercher_produit(jTextField1.getText());
+    }
+
     private void jTextField2ActionPerformed(ActionEvent evt) {
     }
 
@@ -455,7 +472,7 @@ public class Product_interface extends JInternalFrame implements WindowListener 
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
+    private static javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -466,7 +483,7 @@ public class Product_interface extends JInternalFrame implements WindowListener 
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable2;
+    private static javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
@@ -475,14 +492,15 @@ public class Product_interface extends JInternalFrame implements WindowListener 
 
 
     //our functions
+    public static DefaultTableModel model = new DefaultTableModel();
 
     public static DefaultTableModel remplir_jtable() throws SQLException {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Id");
-        model.addColumn("Libelle");
-        model.addColumn("Prix");
-        model.addColumn("Description");
-
+        if (!Objects.equals(model.getColumnName(0), "Id")) {
+            model.addColumn("Id");
+            model.addColumn("Libelle");
+            model.addColumn("Prix");
+            model.addColumn("Description");
+        }
         for (Product p : products){
             model.addRow(new Object[]{p.id,p.libelle,p.prix+"DH",p.description});
         }
@@ -507,7 +525,7 @@ public class Product_interface extends JInternalFrame implements WindowListener 
 
 
     //peut etre utuliser pour la recherche
-    public int find_product_in_list(String id){
+    public static int find_product_in_list(String id){
         for (int i=0;i<products.size();i++){
             if (products.get(i).id.equals(id)) {
                 return i;
@@ -555,7 +573,6 @@ public class Product_interface extends JInternalFrame implements WindowListener 
     }
 
     public void exporter_data(){
-
         JFrame parentComponent = new JFrame();
         JFileChooser fileChooser= new JFileChooser();
         // Some init code, if you need one, like setting title
@@ -563,7 +580,33 @@ public class Product_interface extends JInternalFrame implements WindowListener 
         //ask the user for an input in a little message box
         if ( returnVal == JFileChooser.APPROVE_OPTION) {
             File fileToSave = fileChooser.getSelectedFile();
-            export_pdf(fileToSave,"test","testtitre",products);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date date = new Date();
+            export_pdf(fileToSave, Login_Interface.user_logged_in.name +  " " + Login_Interface.user_logged_in.last_name ,  "Exportation des donnees | DATE " + formatter.format(date),products);
+        }
+    }
+    static boolean search = false;
+    public static void chercher_produit(String id) throws SQLException {
+
+        int output = find_product_in_list(id);
+        if (!search){
+            search = true;
+            jButton7.setText("X");
+            if (output!=-1){
+                //empty the table in the interface
+                model.setRowCount(0);
+                model.addRow(new Object[]{products.get(output).id,products.get(output).libelle,products.get(output).prix+"DH",products.get(output).description});
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Cette id n'existe pas!");
+            }
+            return;
+        }
+        else{
+            jButton7.setText("Recherche");
+            model.setRowCount(0);
+            remplir_jtable();
+            search =false;
         }
 
     }
@@ -573,7 +616,6 @@ public class Product_interface extends JInternalFrame implements WindowListener 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
 
         return products;
     }
