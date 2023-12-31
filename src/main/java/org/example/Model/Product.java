@@ -16,6 +16,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static org.example.Model.Stock.get_stock_by_id;
+
 public class Product {
     public String id;
     public String libelle;
@@ -78,25 +80,17 @@ public class Product {
         ArrayList<Product> products = new ArrayList<Product>();
         int count = connection.execute_query("Select count(*) as number_of_products from Products").getInt("number_of_products");
         ResultSet resultSet = connection.execute_query("Select * from Products");
-        ArrayList<Stock> stock_list = Stock.get_all_stocks(connection);
-        Stock stock_prod = null;
+
         for (int i=0;i<count;i++){
-            //search for the correct stock and use in the product constructor
-            for (Stock s:stock_list){
-                if (s.id_stock == resultSet.getInt("stock_id")){
-                    stock_prod = s;
-                    break;
-                }
-            }
             products.add(new Product(resultSet.getString("id"),
                                     resultSet.getString("libelle"),
                                     resultSet.getDouble("price"),
                                     resultSet.getString("description"),
-                                    stock_prod));
+                                    get_stock_by_id(resultSet.getInt("stock_id"), connection))
+            );
             resultSet.next();
         }
         return products;
-
     }
     public static  void export_pdf(File file, String author, String title, ArrayList<Product> data){
         // Output PDF file
@@ -110,7 +104,6 @@ public class Product {
             // Set metadata
             pdfDocument.getDocumentInfo().setAuthor(author);
             pdfDocument.getDocumentInfo().setTitle(title);
-
             document.add(new Paragraph(title));
             System.out.println("PDF with metadata generated successfully.");
 
@@ -122,8 +115,7 @@ public class Product {
             table.addHeaderCell(new Cell().add(new Paragraph("Libelle")));
             table.addHeaderCell(new Cell().add(new Paragraph("Prix")));
             table.addHeaderCell(new Cell().add(new Paragraph("Description")));
-
-
+            table.addHeaderCell(new Cell().add(new Paragraph("Stock")));
 
             data.forEach(
                     d->{
@@ -131,6 +123,7 @@ public class Product {
                         table.addCell(new Cell().add(new Paragraph(d.libelle)));
                         table.addCell(new Cell().add(new Paragraph(String.valueOf(d.prix)+"DH")));
                         table.addCell(new Cell().add(new Paragraph(d.description)));
+                        table.addCell(new Cell().add(new Paragraph(d.stock.name_stock)));
 
                     }
             );
@@ -145,6 +138,6 @@ public class Product {
         }
     }
     public static void main(String[] args) throws SQLException {
-
+        get_all_products(Product_interface.db_connection);
     }
 }

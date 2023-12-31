@@ -3,6 +3,7 @@ package org.example.Interfaces;
 import org.example.Model.DB_connection;
 import org.example.Model.Product;
 import org.example.Helper.PrinterHelper;
+import org.example.Model.Stock;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
@@ -67,6 +69,7 @@ public class Product_interface extends JInternalFrame implements WindowListener 
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jTable2.setModel(remplir_jtable());
+        jComboBox1.setModel(populate_combo());
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -219,7 +222,8 @@ public class Product_interface extends JInternalFrame implements WindowListener 
         jButton7.setText("RECHERCHER");
         jButton7.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        //populated using a custom function
+
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(158, 42, 43));
@@ -418,14 +422,14 @@ public class Product_interface extends JInternalFrame implements WindowListener 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         // TODO add your handling code here (Ajouter):
         ajouter_produit(jTextField1.getText(),jTextField3.getText(),
-                Double.parseDouble(jTextField4.getText()),jTextField2.getText());
+                Double.parseDouble(jTextField4.getText()),jTextField2.getText(), Stock.get_stock_id_by_name(jComboBox1.getSelectedItem().toString(), stocks));
 
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         // TODO add your handling code here:
         modifier_produit(jTextField1.getText(),jTextField3.getText(),
-                Double.parseDouble(jTextField4.getText()),jTextField2.getText());
+                Double.parseDouble(jTextField4.getText()),jTextField2.getText(), Integer.parseInt(jComboBox1.getSelectedItem().toString()));
 
     }
 
@@ -469,9 +473,8 @@ public class Product_interface extends JInternalFrame implements WindowListener 
                 try {
                     new Product_interface().setVisible(true);
                     remplir_jtable();
-
+                    populate_combo();
                 } catch (SQLException e) {
-
                     throw new RuntimeException(e);
                 }
             }
@@ -479,7 +482,7 @@ public class Product_interface extends JInternalFrame implements WindowListener 
     }
 
     // Variables declaration - do not modify
-    private javax.swing.JComboBox<String> jComboBox1;
+    private static javax.swing.JComboBox<String> jComboBox1;
 
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -508,28 +511,15 @@ public class Product_interface extends JInternalFrame implements WindowListener 
 
 
     //our functions
-    public static DefaultTableModel model = new DefaultTableModel();
-
-    public static DefaultTableModel remplir_jtable() throws SQLException {
-        if (!Objects.equals(model.getColumnName(0), "Id")) {
-            model.addColumn("Id");
-            model.addColumn("Libelle");
-            model.addColumn("Prix");
-            model.addColumn("Description");
-            model.addColumn("NOM DU STOCK");
-        }
-        for (Product p : products){
-            model.addRow(new Object[]{p.id,p.libelle,p.prix+"DH",p.description});
-        }
-        return model;
-    }
-
-    public void ajouter_produit(String id, String libelle, Double prix, String description) throws SQLException {
+    public void ajouter_produit(String id, String libelle, Double prix, String description, int stock_id) throws SQLException {
         int count = db_connection.execute_query("Select count(*) as count from products where id="+id).getInt("count");
         if (count == 0 && (!id.equals("") && !prix.isNaN())){
-            Product produit= new Product(id, libelle, prix, description);
+            //TODO: make sure an object stock is being created here and it is used in the Product constructor
+            //in this case the object is being created while used as a parameter
+
+            Product produit= new Product(id, libelle, prix, description,Stock.get_stock_by_id(stock_id, db_connection));
             products.add((produit));
-            String query = "Insert into Products values("+produit.id+", '"+produit.libelle+"','"+produit.description+"',"+produit.prix+")";
+            String query = "Insert into Products values("+produit.id+", '"+produit.libelle+"','"+produit.description+"',"+produit.prix+", "+produit.stock.id_stock+")";
             db_connection.execute_query_UD(query);
             jTable2.setModel(remplir_jtable());
             JOptionPane.showMessageDialog(null, "Produit ajouter!");
@@ -550,15 +540,16 @@ public class Product_interface extends JInternalFrame implements WindowListener 
         return -1;
     }
 
-    public void modifier_produit(String id, String libelle, double prix, String description) throws SQLException{
+    public void modifier_produit(String id, String libelle, double prix, String description, int stock_id) throws SQLException{
         for (Product p: products){
             System.out.println(p.id);
         }
         if (find_product_in_list(id)>-1){
-            Product produit_mod = new Product(id, libelle,prix,description);
+
+            Product produit_mod= new Product(id, libelle, prix, description,Stock.get_stock_by_id(stock_id, db_connection));
             //replace the new product in the products list using the index of the found product
             products.set(find_product_in_list(id), produit_mod);
-            String query = "Insert into Products values("+produit_mod.id+", '"+produit_mod.libelle+"',"+produit_mod.prix+",'"+produit_mod.description+"')";
+            String query = "Update Products set libelle='"+produit_mod.libelle+"', prix = '"+produit_mod.prix+"', description ='"+produit_mod.description+"', stock_id ="+produit_mod.stock.id_stock+", where id='"+produit_mod.id+"'";
             products=Product.get_all_products(db_connection);
             db_connection.execute_query(query);
             jTable2.setModel(remplir_jtable());
@@ -611,7 +602,7 @@ public class Product_interface extends JInternalFrame implements WindowListener 
             if (output!=-1){
                 //empty the table in the interface
                 model.setRowCount(0);
-                model.addRow(new Object[]{products.get(output).id,products.get(output).libelle,products.get(output).prix+"DH",products.get(output).description});
+                model.addRow(new Object[]{products.get(output).id,products.get(output).libelle,products.get(output).prix+"DH",products.get(output).description, products.get(output).stock.getName_stock()});
             }
             else{
                 JOptionPane.showMessageDialog(null, "Cette id n'existe pas!");
@@ -624,7 +615,6 @@ public class Product_interface extends JInternalFrame implements WindowListener 
             remplir_jtable();
             search =false;
         }
-
     }
     public static ArrayList<Product> remplir_list(){
         try {
@@ -635,7 +625,41 @@ public class Product_interface extends JInternalFrame implements WindowListener 
 
         return products;
     }
+    public static ArrayList<String> list_stock_nom = null;
 
+    public static DefaultTableModel model = new DefaultTableModel();
+
+    public static DefaultTableModel remplir_jtable() throws SQLException {
+        model.setRowCount(0);
+        if (!Objects.equals(model.getColumnName(0), "Id")) {
+            model.addColumn("Id");
+            model.addColumn("Libelle");
+            model.addColumn("Prix");
+            model.addColumn("Description");
+            model.addColumn("Nom du Stock");
+        }
+        for (Product p : products){
+            model.addRow(new Object[]{p.id,p.libelle,p.prix+"DH",p.description, p.stock.name_stock});
+        }
+        return model;
+    }
+    public static ArrayList<Stock> stocks;
+
+    static {
+        try {
+            stocks = Stock.get_all_stocks(db_connection);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static  DefaultComboBoxModel populate_combo() throws SQLException {
+        DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel();
+        for (Stock s : stocks){
+            comboBoxModel.addElement(s.getName_stock());
+        }
+        return comboBoxModel;
+    }
     @Override
     public void windowOpened(WindowEvent e) {
         jMenuItem1.setEnabled(false);

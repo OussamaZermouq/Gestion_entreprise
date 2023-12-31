@@ -7,6 +7,9 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.sun.jdi.connect.spi.Connection;
+import org.example.Interfaces.MDIParent;
+import org.example.Interfaces.Product_interface;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +58,27 @@ public class Stock {
         return stocks;
 
     }
+
+
+    public static Stock get_stock_by_id(int id, DB_connection db_connection) throws SQLException {
+        ArrayList<Stock> stock_list = get_all_stocks(db_connection);
+        for (Stock s:stock_list){
+            if (s.id_stock == id){
+                System.out.println("MOK");
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public static int get_stock_id_by_name(String stock_name, ArrayList<Stock> stocks){
+        for (Stock s : stocks){
+            if (s.name_stock.equals(stock_name)){
+                return s.id_stock;
+            }
+        }
+        return -1;
+    }
     public static  void export_pdf(File file, String author, String title, ArrayList<Stock> data){
         // Output PDF file
 
@@ -63,7 +87,6 @@ public class Stock {
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDocument = new PdfDocument(writer);
             Document document = new Document(pdfDocument);
-
             // Set metadata
             pdfDocument.getDocumentInfo().setAuthor(author);
             pdfDocument.getDocumentInfo().setTitle(title);
@@ -94,5 +117,9 @@ public class Stock {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) throws SQLException {
+
     }
 }

@@ -16,7 +16,6 @@ public class Stock_interface extends javax.swing.JInternalFrame {
     public static DB_connection db_connection = new DB_connection();
     public static boolean closed;
 
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

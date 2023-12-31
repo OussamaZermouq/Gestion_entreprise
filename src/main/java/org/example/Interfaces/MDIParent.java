@@ -139,7 +139,7 @@ public class MDIParent extends javax.swing.JFrame {
 
         pack();
         //own functions
-        
+
     }// </editor-fold>
 
     private void jMenuItem3ActionPerformed(ActionEvent evt) {
@@ -211,7 +211,6 @@ public class MDIParent extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MDIParent.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
