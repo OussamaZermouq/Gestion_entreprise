@@ -541,9 +541,7 @@ public class Product_interface extends JInternalFrame implements WindowListener 
     }
 
     public void modifier_produit(String id, String libelle, double prix, String description, int stock_id) throws SQLException{
-        for (Product p: products){
-            System.out.println(p.id);
-        }
+
         if (find_product_in_list(id)>-1){
 
             Product produit_mod= new Product(id, libelle, prix, description,Stock.get_stock_by_id(stock_id, db_connection));
@@ -561,7 +559,7 @@ public class Product_interface extends JInternalFrame implements WindowListener 
     }
 
     public void supprimer_produit(String id) throws SQLException{
-        if (find_product_in_list(id)>-1){
+        if (find_product_in_list(id)> -1){
             String query = "Delete from products where id='"+id+"'";
             int out = db_connection.execute_query_UD(query);
             if (out >0){
@@ -622,7 +620,6 @@ public class Product_interface extends JInternalFrame implements WindowListener 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
         return products;
     }
     public static ArrayList<String> list_stock_nom = null;

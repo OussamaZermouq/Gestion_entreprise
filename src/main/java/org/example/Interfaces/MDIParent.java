@@ -1,13 +1,17 @@
 package org.example.Interfaces;
 
 import com.itextpdf.commons.actions.data.ProductData;
+import com.sun.jdi.connect.spi.Connection;
+import org.example.Model.DB_connection;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 public class MDIParent extends javax.swing.JFrame {
 
+    public static DB_connection db_connection = new DB_connection();
     public MDIParent() {
         initComponents();
     }
@@ -84,7 +88,11 @@ public class MDIParent extends javax.swing.JFrame {
 
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                try {
+                    jMenuItem3ActionPerformed(evt);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jMenu1.add(jMenuItem1);
@@ -110,7 +118,6 @@ public class MDIParent extends javax.swing.JFrame {
             }
         });
         jMenu1.add(jMenuItem4);
-
         jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem5.setText("Livraison");
         jMenu1.add(jMenuItem5);
@@ -118,12 +125,9 @@ public class MDIParent extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Account");
-
         jMenu3.setText("Detail");
         jMenu2.add(jMenu3);
-
         jMenuBar1.add(jMenu2);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -136,18 +140,14 @@ public class MDIParent extends javax.swing.JFrame {
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jDesktopPane1)
         );
-
         pack();
         //own functions
-
     }// </editor-fold>
 
-    private void jMenuItem3ActionPerformed(ActionEvent evt) {
-
+    private void jMenuItem3ActionPerformed(ActionEvent evt) throws SQLException {
         Stock_interface stockInterface = new Stock_interface();
         stockInterface.setVisible(true);
         jDesktopPane1.add(stockInterface);
-
     }
 
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -161,12 +161,10 @@ public class MDIParent extends javax.swing.JFrame {
 
     private void jMenu1MenuSelected(javax.swing.event.MenuEvent evt) {
         // TODO add your handling code here:
-
     }
 
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
-
     }
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
@@ -174,7 +172,6 @@ public class MDIParent extends javax.swing.JFrame {
         Product_interface productInterface = new Product_interface();
         productInterface.setVisible(true);
         jDesktopPane1.add(productInterface);
-
     }
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -196,7 +193,7 @@ public class MDIParent extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

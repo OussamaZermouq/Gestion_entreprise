@@ -94,7 +94,6 @@ public class Product {
     }
     public static  void export_pdf(File file, String author, String title, ArrayList<Product> data){
         // Output PDF file
-
         try {
 
             PdfWriter writer = new PdfWriter(file);
@@ -108,7 +107,7 @@ public class Product {
             System.out.println("PDF with metadata generated successfully.");
 
             // Create a table with three columns
-            Table table = new Table(4);
+            Table table = new Table(5);
 
             // Add header cells
             table.addHeaderCell(new Cell().add(new Paragraph("id")));
@@ -138,6 +137,5 @@ public class Product {
         }
     }
     public static void main(String[] args) throws SQLException {
-        get_all_products(Product_interface.db_connection);
     }
 }
