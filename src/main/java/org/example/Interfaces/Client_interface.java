@@ -13,9 +13,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static org.example.Model.Client.export_pdf;
-public class Client_interface extends JFrame {
+import static org.example.Model.Client.get_all_client;
+
+public class Client_interface extends JInternalFrame {
     public static DB_connection db_connection = new DB_connection();
     public static ArrayList<Client> clients = remplir_list();
+    public static DefaultTableModel model = new DefaultTableModel();
 
 
     /**
@@ -26,7 +29,7 @@ public class Client_interface extends JFrame {
     /**
      * Creates new form Client_interface
      */
-    public Client_interface() {
+    public Client_interface() throws SQLException {
         initComponents();
     }
 
@@ -37,7 +40,7 @@ public class Client_interface extends JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
+    private void initComponents() throws SQLException {
 
         jPanel1 = new JPanel();
         jPanel2 = new JPanel();
@@ -69,7 +72,6 @@ public class Client_interface extends JFrame {
         jButton7 = new JButton();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(158, 42, 43));
         jPanel1.setForeground(new java.awt.Color(158, 42, 43));
@@ -104,7 +106,7 @@ public class Client_interface extends JFrame {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(158, 42, 43));
-        jLabel7.setText("PAYE:");
+        jLabel7.setText("PAYS:");
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(158, 42, 43));
@@ -304,17 +306,16 @@ public class Client_interface extends JFrame {
         jPanel3.setBackground(new java.awt.Color(158, 42, 43));
         jPanel3.setPreferredSize(new java.awt.Dimension(800, 250));
 
-        jTable1.setModel(new DefaultTableModel(
-                new Object [][] {
-                        {null, null, null, null, null, null, null, null},
-                        {null, null, null, null, null, null, null, null},
-                        {null, null, null, null, null, null, null, null},
-                        {null, null, null, null, null, null, null, null}
-                },
-                new String [] {
-                        "ID", "NOM", "PRENOM", "ADRESSE", "TELE", "PAYE", "VILLE", "CODE"
-                }
-        ));
+        model.addColumn("Id");
+        model.addColumn("nom");
+        model.addColumn("prenom");
+        model.addColumn("adresse");
+        model.addColumn("tele");
+        model.addColumn("pays");
+        model.addColumn("ville");
+        model.addColumn("code");
+
+        jTable1.setModel(remplir_jtable());
         jScrollPane1.setViewportView(jTable1);
 
         jButton6.setBackground(new java.awt.Color(158, 42, 43));
@@ -481,9 +482,13 @@ public class Client_interface extends JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-               Client_interface c1 = new Client_interface();
-               c1.setVisible(true);
-               c1.setLocationRelativeTo(null);//bach iban lwest
+                Client_interface c1 = null;
+                try {
+                    c1 = new Client_interface();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                c1.setVisible(true);
                 try {
                     jTable1.setModel(remplir_jtable());
                 } catch (SQLException e) {
@@ -527,15 +532,8 @@ public class Client_interface extends JFrame {
     //our functions
 
     public static DefaultTableModel remplir_jtable() throws SQLException {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Id");
-        model.addColumn("nom");
-        model.addColumn("prenom");
-        model.addColumn("adresse");
-        model.addColumn("tele");
-        model.addColumn("pays");
-        model.addColumn("ville");
-        model.addColumn("code");
+        model.setRowCount(0);
+
         for (Client c : clients){
             model.addRow(new Object[]{c.id,c.nom,c.prenom,c.adresse,c.tele,c.pays,c.ville,c.codee});
         }
@@ -545,13 +543,18 @@ public class Client_interface extends JFrame {
 
     public void ajouter_client(String id,String nom,String prenom,String adresse,String tele,String pays,String ville,String codee) throws SQLException {
         int count = db_connection.execute_query("Select count(*) as count from client where id="+id).getInt("count");
-        if (count == 0 && (!id.equals("") )){
-            Client client= new Client(id, nom, prenom, adresse,tele,pays,ville,codee);
-            clients.add(client);
-            String query = "Insert into Client values('"+client.id+"', '"+client.nom+"','"+client.prenom+"','"+client.adresse+"','"+client.tele+"','"+client.pays+"','"+client.ville+"','"+client.codee+"')";
-            System.out.println(query);
-            jTable1.setModel(remplir_jtable());
-            JOptionPane.showMessageDialog(null, "Client ajouter!");
+        if (count == 0){
+            if(!id.equals("")){
+                Client client= new Client(id, nom, prenom, adresse,tele,pays,ville,codee);
+                clients.add(client);
+                String query = "Insert into Client values('"+client.id+"', '"+client.nom+"','"+client.prenom+"','"+client.adresse+"','"+client.tele+"','"+client.pays+"','"+client.ville+"','"+client.codee+"')";
+                db_connection.execute_query_UD(query);
+                jTable1.setModel(remplir_jtable());
+                JOptionPane.showMessageDialog(null, "Client ajouter!");
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Veuillez remplir les champs important!");
+            }
         }
         else{
             JOptionPane.showMessageDialog(null, "Cette id existe deja.");
@@ -583,16 +586,13 @@ public class Client_interface extends JFrame {
 
     //hbibna had l9wada makhdamach
     public void modifier_client(String id, String nom, String prenom, String adresse, String tele, String pays, String ville, String codee) throws SQLException{
-        for (Client c: clients){
-            System.out.println(c.id);
-        }
         if (find_client_in_list(id)>-1){
             Client client_mod = new Client(id,nom,prenom,adresse,tele,pays,ville,codee);
             //replace the new product in the products list using the index of the found product
             clients.set(find_client_in_list(id), client_mod);
-            String query = "Insert into client values("+client_mod.id+", '"+client_mod.nom+"',"+client_mod.prenom+",'"+client_mod.adresse+","+client_mod.tele+","+client_mod.pays+","+client_mod.ville+","+client_mod.codee+"')";
-            clients=Client.get_all_client(db_connection);
+            String query = "update client set nom = '"+client_mod.nom+"',prenom = '"+client_mod.prenom+"',adresse = '"+client_mod.adresse+"',tele = '"+client_mod.tele+"',pays = '"+client_mod.pays+"', ville='"+client_mod.ville+"',code='"+client_mod.codee+"' where id = '"+client_mod.id+"'";
             db_connection.execute_query_UD(query);
+            clients = get_all_client(MDIParent.db_connection);
             jTable1.setModel(remplir_jtable());
             JOptionPane.showMessageDialog(null, "Produit modifier!");
         }

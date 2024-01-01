@@ -112,6 +112,25 @@ public class Client {
         }
         return true;
     }
+
+    public static Client get_client_by_id(String id, ArrayList<Client> clients){
+        for (Client c:clients){
+            if (c.id.equals(id)){
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public static Client get_client_by_name(String name, ArrayList<Client> clients){
+        for (Client c:clients){
+            if (c.nom.equals(name)){
+                return c;
+            }
+        }
+        return null;
+    }
+
     public static ArrayList<Client> get_all_client(DB_connection connection) throws SQLException {
         ArrayList<Client> client = new ArrayList<Client>();
         int count = connection.execute_query("Select count(*) as number_of_client from client").getInt("number_of_client");
@@ -122,20 +141,16 @@ public class Client {
                     resultSet.getString("prenom"),
                     resultSet.getString("adresse"),
                     resultSet.getString("tele"),
-                    resultSet.getString("paye"),
+                    resultSet.getString("pays"),
                     resultSet.getString("ville"),
                     resultSet.getString("code")));
             resultSet.next();
         }
         return client;
-
-
     }
     public static  void export_pdf(File file, String author, String title, ArrayList<Client> data){
         // Output PDF file
-
         try {
-
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDocument = new PdfDocument(writer);
             Document document = new Document(pdfDocument);
@@ -156,14 +171,9 @@ public class Client {
             table.addHeaderCell(new Cell().add(new Paragraph("prenom")));
             table.addHeaderCell(new Cell().add(new Paragraph("adresse")));
             table.addHeaderCell(new Cell().add(new Paragraph("tele")));
-            table.addHeaderCell(new Cell().add(new Paragraph("paye")));
+            table.addHeaderCell(new Cell().add(new Paragraph("pays")));
             table.addHeaderCell(new Cell().add(new Paragraph("ville")));
             table.addHeaderCell(new Cell().add(new Paragraph("codee")));
-
-
-
-
-
 
             data.forEach(
                     d->{
@@ -175,8 +185,6 @@ public class Client {
                         table.addCell(new Cell().add(new Paragraph(d.pays)));
                         table.addCell(new Cell().add(new Paragraph(d.ville)));
                         table.addCell(new Cell().add(new Paragraph(d.codee)));
-
-
 
                     }
             );

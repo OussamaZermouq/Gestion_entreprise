@@ -4,6 +4,7 @@ import com.itextpdf.commons.actions.data.ProductData;
 import com.sun.jdi.connect.spi.Connection;
 import org.example.Model.DB_connection;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,6 +29,7 @@ public class MDIParent extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
 
@@ -95,13 +97,23 @@ public class MDIParent extends javax.swing.JFrame {
                 }
             }
         });
-        jMenu1.add(jMenuItem1);
 
+        jMenu1.add(jMenuItem1);
         jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem2.setText("Client");
+        jMenuItem2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                try {
+                    jMenuItem2ActionPerformed(evt);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jMenu1.add(jMenuItem2);
@@ -121,6 +133,21 @@ public class MDIParent extends javax.swing.JFrame {
         jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem5.setText("Livraison");
         jMenu1.add(jMenuItem5);
+
+
+        jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        jMenuItem6.setText("Commande");
+        jMenu1.add(jMenuItem6);
+        jMenuItem6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    jMenuItem6ActionPerformed(e);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
 
         jMenuBar1.add(jMenu1);
 
@@ -174,12 +201,23 @@ public class MDIParent extends javax.swing.JFrame {
         jDesktopPane1.add(productInterface);
     }
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         // TODO add your handling code here:
+
+        Client_interface clientInterface = new Client_interface();
+        clientInterface.setVisible(true);
+        jDesktopPane1.add(clientInterface);
+
     }
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+    }
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+        // TODO add your handling code here:
+        Commande_Interface commandeInterface = new Commande_Interface();
+        commandeInterface.setVisible(true);
+        jDesktopPane1.add(commandeInterface);
     }
 
     /**
@@ -193,7 +231,7 @@ public class MDIParent extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
+                if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -227,6 +265,7 @@ public class MDIParent extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     // End of variables declaration
 }
 
