@@ -6,6 +6,7 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import org.example.Interfaces.MDIParent;
 import org.example.Model.DB_connection.*;
 
 import java.io.File;
@@ -17,16 +18,16 @@ import java.util.ArrayList;
 
 public class User {
     public int id;
-    public String name;
-    public String last_name;
-    public int age;
-    public String email;
+    public static String name;
+    public static String last_name;
+    public static int age;
+    public static String email;
     public String username;
-    public String password;
+    public static String password;
 
 
     //database connection to be used in functions
-    DB_connection db = new DB_connection();
+    static DB_connection db = new DB_connection();
 
 
     public User(){
@@ -74,6 +75,15 @@ public class User {
         }
         return user_logged;
     }
+    public static void modify_info(User user_info){
+        //this function takes as an argument the same logged_in user but with modified info
 
-
+        db = MDIParent.db_connection;
+        name = user_info.name;
+        last_name = user_info.last_name;
+        email = user_info.email;
+        age = user_info.age;
+        password = user_info.password;
+        db.execute_query_UD("update users set name = '"+name+"',last_name = '"+last_name+"',age = '"+age+"',email = '"+email+"',password = '"+password+"' where id="+user_info.id+"");
+    }
 }

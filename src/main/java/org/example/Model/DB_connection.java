@@ -3,14 +3,14 @@ package org.example.Model;
 import java.sql.*;
 
 public class DB_connection {
-        public String url = "jdbc:mysql://localhost";
-        public String port = "3306";
-        public String db_name = "gestion_entreprise";
+        public static String url = "jdbc:mysql://localhost";
+        public static String port = "3306";
+        public static String db_name = "gestion_entreprise";
 
-        public String user = "root";
-        public String password = "";
+        public static String user = "root";
+        public static String password = "";
         public static java.sql.Connection connection = null;
-        public Connection connect_to_db(){
+        public static Connection connect_to_db(){
             try{
                 connection = DriverManager.getConnection(url+":"+port+"/"+db_name, user, password);
                 System.out.println("Connected to DB!");
@@ -52,7 +52,6 @@ public class DB_connection {
         }
 
     public static void main(String[] args) {
-        DB_connection conn = new DB_connection();
-        conn.connect_to_db();
+
     }
 }

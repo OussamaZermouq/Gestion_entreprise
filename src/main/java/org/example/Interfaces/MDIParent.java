@@ -5,6 +5,8 @@ import com.sun.jdi.connect.spi.Connection;
 import org.example.Model.DB_connection;
 
 import javax.swing.*;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +25,7 @@ public class MDIParent extends javax.swing.JFrame {
 
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
+
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -30,20 +33,30 @@ public class MDIParent extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new JMenuItem();
+        jMenuItem7 = new JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
+        JLabel jLabel1 = new JLabel();
+
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+
+        jDesktopPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
         jDesktopPane1Layout.setHorizontalGroup(
                 jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 1037, Short.MAX_VALUE)
+                        .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 12, Short.MAX_VALUE))
         );
         jDesktopPane1Layout.setVerticalGroup(
                 jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 538, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1045, Short.MAX_VALUE)
         );
 
         jMenu1.setText("Gerer");
@@ -134,6 +147,17 @@ public class MDIParent extends javax.swing.JFrame {
         jMenuItem5.setText("Livraison");
         jMenu1.add(jMenuItem5);
 
+        jMenuItem5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    jMenuItem5ActionPerformed(e);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+            }
+        });
 
         jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem6.setText("Commande");
@@ -152,10 +176,23 @@ public class MDIParent extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Account");
-        jMenu3.setText("Detail");
-        jMenu2.add(jMenu3);
+
+        jMenu2.add(jMenuItem7);
         jMenuBar1.add(jMenu2);
         setJMenuBar(jMenuBar1);
+
+        jMenuItem7.setText("Detail");
+
+        jMenuItem7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    jMenuItem7ActionPerformed(e);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -167,14 +204,32 @@ public class MDIParent extends javax.swing.JFrame {
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jDesktopPane1)
         );
+
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\oussa\\Documents\\Dev\\Java\\Gestion_entreprise_project\\src\\main\\java\\org\\example\\Interfaces\\Images\\BG_proper_size_3.png")); // NOI18N
+        jLabel1.setText("jLabel1");
+
+        jLabel1.setMaximumSize(getSize());
+        jLabel1.setMinimumSize(getSize());
+        jLabel1.setPreferredSize(getSize());
         pack();
+
         //own functions
     }// </editor-fold>
 
     private void jMenuItem3ActionPerformed(ActionEvent evt) throws SQLException {
         Stock_interface stockInterface = new Stock_interface();
+        stockInterface.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosed(InternalFrameEvent e) {
+                lock_unlock_menu(false);
+            }
+        });
         stockInterface.setVisible(true);
         jDesktopPane1.add(stockInterface);
+
+        lock_unlock_menu(true);
     }
 
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -190,6 +245,10 @@ public class MDIParent extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
+    private void jMenu3ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
     }
@@ -197,28 +256,98 @@ public class MDIParent extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         // TODO add your handling code here:
         Product_interface productInterface = new Product_interface();
+        productInterface.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosed(InternalFrameEvent e) {
+                lock_unlock_menu(false);
+            }
+        });
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension frameSize = productInterface.getSize();
+
+        int x = (desktopSize.width - frameSize.width) / 2;
+        int y = (desktopSize.height - frameSize.height) / 2;
+
+        productInterface.setLocation(x, y);
         productInterface.setVisible(true);
         jDesktopPane1.add(productInterface);
+
+        lock_unlock_menu(true);
     }
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         // TODO add your handling code here:
 
         Client_interface clientInterface = new Client_interface();
+        clientInterface.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosed(InternalFrameEvent e) {
+                lock_unlock_menu(false);
+
+            }
+        });
         clientInterface.setVisible(true);
         jDesktopPane1.add(clientInterface);
+
+        lock_unlock_menu(true);
 
     }
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+        // TODO add your handling code here:
+        Livraison_interface livraisonInterface = new Livraison_interface();
+        livraisonInterface.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosed(InternalFrameEvent e) {
+                lock_unlock_menu(false);
+            }
+        });
+
+        livraisonInterface.setVisible(true);
+        jDesktopPane1.add(livraisonInterface);
+        lock_unlock_menu(true);
+    }
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         // TODO add your handling code here:
         Commande_Interface commandeInterface = new Commande_Interface();
+        commandeInterface.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosed(InternalFrameEvent e) {
+                lock_unlock_menu(false);
+
+            }
+        });
         commandeInterface.setVisible(true);
         jDesktopPane1.add(commandeInterface);
+        lock_unlock_menu(true);
     }
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+        // TODO add your handling code here:
+        UserInterface userinterface = new UserInterface();
+        userinterface.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosed(InternalFrameEvent e) {
+                lock_unlock_menu(false);
+            }
+        });
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension frameSize = userinterface.getSize();
+
+        int x = (desktopSize.width - frameSize.width) / 2;
+        int y = (desktopSize.height - frameSize.height) / 2;
+
+        userinterface.setLocation(x, y);
+        userinterface.setVisible(true);
+        jDesktopPane1.add(userinterface);
+
+        lock_unlock_menu(true);
+
+    }
+
+
 
     /**
      * @param args the command line arguments
@@ -250,8 +379,18 @@ public class MDIParent extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MDIParent().setVisible(true);
+
             }
         });
+    }
+
+    public static void lock_unlock_menu(boolean wo){
+        jMenuItem1.setEnabled(!wo);
+        jMenuItem2.setEnabled(!wo);
+        jMenuItem3.setEnabled(!wo);
+        jMenuItem4.setEnabled(!wo);
+        jMenuItem5.setEnabled(!wo);
+        jMenuItem6.setEnabled(!wo);
     }
 
     // Variables declaration - do not modify
@@ -261,11 +400,12 @@ public class MDIParent extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     public static javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
+    private static javax.swing.JMenuItem jMenuItem2;
+    private static javax.swing.JMenuItem jMenuItem3;
+    private static javax.swing.JMenuItem jMenuItem4;
+    private static javax.swing.JMenuItem jMenuItem5;
+    private static javax.swing.JMenuItem jMenuItem6;
+    private static javax.swing.JMenuItem jMenuItem7;
     // End of variables declaration
 }
 

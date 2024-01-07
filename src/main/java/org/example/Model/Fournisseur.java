@@ -88,7 +88,7 @@ public class Fournisseur {
     public void setCodee(String codee) {
         this.codee = codee;
     }
-    public static ArrayList<Fournisseur> get_all_Fournisseur(DB_connection connection) throws SQLException {
+    public static ArrayList<Fournisseur> get_all_fournisseur(DB_connection connection) throws SQLException {
         ArrayList<Fournisseur> Fournisseur = new ArrayList<Fournisseur>();
         int count = connection.execute_query("Select count(*) as number_of_Fournisseur from Fournisseur").getInt("number_of_Fournisseur");
         ResultSet resultSet = connection.execute_query("Select * from Fournisseur");
@@ -131,11 +131,6 @@ public class Fournisseur {
             table.addHeaderCell(new Cell().add(new Paragraph("paye")));
             table.addHeaderCell(new Cell().add(new Paragraph("ville")));
             table.addHeaderCell(new Cell().add(new Paragraph("codee")));
-
-
-
-
-
 
             data.forEach(
                     d->{

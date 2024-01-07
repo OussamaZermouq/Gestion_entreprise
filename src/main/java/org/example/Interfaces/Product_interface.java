@@ -666,12 +666,11 @@ public class Product_interface extends JInternalFrame implements WindowListener 
     @Override
     public void windowClosing(WindowEvent e) {
 
+
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-        jMenuItem1.setEnabled(true);
-
     }
 
     @Override
