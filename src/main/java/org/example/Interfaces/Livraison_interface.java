@@ -1,24 +1,45 @@
 package org.example.Interfaces;
 
 
-import org.example.Model.DB_connection;
-import org.example.Model.Fournisseur;
-import org.example.Model.Livraison;
+import org.example.Helper.PrinterHelper;
+import org.example.Model.*;
 
+import javax.swing.*;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Objects;
+
+import static org.example.Model.Product.export_pdf;
+import static org.example.Model.Product.get_all_products;
 
 public class Livraison_interface extends javax.swing.JInternalFrame {
-    public static DB_connection db_connection = new DB_connection();
+    public static ArrayList<Livraison> livraisons;
+    public static ArrayList<Fournisseur> fournisseurs;
 
+    static {
+        try {
+            livraisons = Livraison.get_all_livraison(MDIParent.db_connection);
+            fournisseurs = Fournisseur.get_all_fournisseur(MDIParent.db_connection);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Creates new form Livraison_interface
      */
     public Livraison_interface() throws SQLException {
         initComponents();
-       // Livraison.populateCombo1(jComboBox1);
-      //  Livraison.populateCombo2(jComboBox2);
+
     }
 
 
@@ -29,7 +50,7 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
+    private void initComponents() throws SQLException {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -40,19 +61,24 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
         jLabel6 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton(); // ajouter
+        jButton2 = new javax.swing.JButton(); // modifier
+        jButton3 = new javax.swing.JButton(); // supprimer
+        jButton4 = new javax.swing.JButton(); // rechercher
         jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox1.setModel(populate_combobox_produit());
         jComboBox2 = new javax.swing.JComboBox<>();
+        jComboBox2.setModel(populate_combobox_fournisseur());
+
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        jTable1.setModel(remplir_jtable());
+        jButton5 = new javax.swing.JButton(); // imprimer
+        jButton6 = new javax.swing.JButton(); // exporter
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
 
         jPanel1.setBackground(new java.awt.Color(158, 42, 43));
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
@@ -103,7 +129,11 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
         jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                try {
+                    jButton1ActionPerformed(evt);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -113,6 +143,17 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
         jButton2.setText("MODIFER");
         jButton2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        jButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    jButton2ActionPerformed(e);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
         jButton3.setBackground(new java.awt.Color(158, 42, 43));
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 243, 176));
@@ -121,7 +162,11 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
         jButton3.setPreferredSize(new java.awt.Dimension(56, 20));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                try {
+                    jButton3ActionPerformed(evt);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -130,15 +175,22 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
         jButton4.setForeground(new java.awt.Color(255, 243, 176));
         jButton4.setText("RECHERCHER");
         jButton4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    jButton4ActionPerformed(e);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
             }
         });
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -209,17 +261,7 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
         jPanel3.setPreferredSize(new java.awt.Dimension(800, 250));
 
         jTable1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String [] {
-                        "ID", "Nmero de Livraison", "ARTICLE", "FOURNISSEUR"
-                }
-        ));
+
         jScrollPane1.setViewportView(jTable1);
 
         jButton5.setBackground(new java.awt.Color(158, 42, 43));
@@ -227,6 +269,12 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
         jButton5.setForeground(new java.awt.Color(255, 243, 176));
         jButton5.setText("IMPRIMER");
         jButton5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jButton5ActionPerformed(e);
+            }
+        });
 
         jButton6.setBackground(new java.awt.Color(158, 42, 43));
         jButton6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -301,7 +349,28 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
         );
 
         pack();
+        setClosable(true);
+        BasicInternalFrameUI ui = (BasicInternalFrameUI)getUI();
+        Container north = (Container)ui.getNorthPane();
+        north.remove(0);
+        north.validate();
+        north.repaint();
+
     }// </editor-fold>
+
+    private void jButton5ActionPerformed(ActionEvent e) {
+        PrinterHelper.printTable(jTable1);
+
+    }
+
+    private void jButton4ActionPerformed(ActionEvent e) throws SQLException {
+        chercher_livraison(jTextField1.getText());
+
+    }
+
+    private void jButton2ActionPerformed(ActionEvent e) throws SQLException {
+        modifier_livraison(jTextField1.getText(), jTextField2.getText(), jComboBox2.getSelectedItem().toString(), jComboBox1.getSelectedItem().toString());
+    }
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
@@ -316,16 +385,19 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         // TODO add your handling code here:
+        ajouter_livraison(jTextField1.getText(), jTextField2.getText(), jComboBox2.getSelectedItem().toString(), jComboBox1.getSelectedItem().toString());
     }
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         // TODO add your handling code here:
+        supprimer_livraison(jTextField1.getText());
     }
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        exporter_data();
     }
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -364,6 +436,7 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
             public void run() {
                 try {
                     new Livraison_interface().setVisible(true);
+
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -371,11 +444,156 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
         });
     }
 
+    public static ArrayList<Livraison> remplir_list(){
+        try {
+            livraisons = Livraison.get_all_livraison(MDIParent.db_connection);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return livraisons;
+    }
+
+    public static DefaultTableModel model = new DefaultTableModel();
+
+    public static DefaultTableModel remplir_jtable() throws SQLException {
+        model.setRowCount(0);
+        if (!Objects.equals(model.getColumnName(0), "Id")) {
+            model.addColumn("Id");
+            model.addColumn("Code livraison");
+            model.addColumn("Fournisseur");
+            model.addColumn("Produit");
+        }
+        for (Livraison l : livraisons){
+            model.addRow(new Object[]{l.id,l.code_livraison,l.fourniseur.nom,l.produit.libelle});
+        }
+        return model;
+    }
+    public void ajouter_livraison(String id, String code_livraison, String fourniseur_name,String produit_name) throws SQLException {
+        int count = MDIParent.db_connection.execute_query("Select count(*) as count from livraison where id="+id).getInt("count");
+        if (count == 0 && (!id.equals(""))){
+            Fournisseur fou = Fournisseur.get_fournisseur_by_id(Fournisseur.get_fournisseur_id_by_name(fourniseur_name, fournisseurs));
+            Product pro = Product.get_produit_by_id(Product.get_product_id_by_name(produit_name, get_all_products(MDIParent.db_connection)));
+            Livraison livraison= new Livraison(id, code_livraison,fou ,pro );
+            livraisons.add(livraison);
+            String query = "Insert into livraison values('"+livraison.id+"', '"+livraison.code_livraison+"','"+livraison.fourniseur.id+"',"+Integer.parseInt(livraison.produit.id)+")";
+            MDIParent.db_connection.execute_query_UD(query);
+            jTable1.setModel(remplir_jtable());
+            JOptionPane.showMessageDialog(null, "Livraison ajouter!");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Cette id existe deja.");
+            return;
+        }
+    }
+
+
+    public static  DefaultComboBoxModel populate_combobox_produit() throws SQLException {
+        //jcombo 1
+        DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel();
+        for (Product p : get_all_products(MDIParent.db_connection)){
+            comboBoxModel.addElement(p.libelle);
+        }
+        return comboBoxModel;
+    }
+
+    public static  DefaultComboBoxModel populate_combobox_fournisseur() throws SQLException {
+        //jcombo 2
+        DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel();
+        for (Fournisseur f : fournisseurs){
+            comboBoxModel.addElement(f.nom);
+        }
+        return comboBoxModel;
+    }
+
+    public static int find_livraison_in_list(String id){
+        for (int i=0;i<livraisons.size();i++){
+            if (livraisons.get(i).id.equals(id)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void modifier_livraison(String id, String code_livraison, String fourniseur_name,String produit_name) throws SQLException{
+
+        if (find_livraison_in_list(id)>-1){
+            Fournisseur fou = Fournisseur.get_fournisseur_by_id(Fournisseur.get_fournisseur_id_by_name(fourniseur_name, fournisseurs));
+            Product pro = Product.get_produit_by_id(Product.get_product_id_by_name(produit_name, get_all_products(MDIParent.db_connection)));
+            Livraison livraison_mod= new Livraison(id, code_livraison, fou, pro);
+            livraisons.set(find_livraison_in_list(id), livraison_mod);
+            String query = "Update livraison set code_livraison='"+livraison_mod.code_livraison+"', four_id = '"+livraison_mod.fourniseur.id+"', prod_id ='"+livraison_mod.produit.id+"', where id='"+livraison_mod.id+"'";
+            livraisons=Livraison.get_all_livraison(MDIParent.db_connection);
+            MDIParent.db_connection.execute_query(query);
+            jTable1.setModel(remplir_jtable());
+            JOptionPane.showMessageDialog(null, "Livraison modifier!");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Cette id n'existe pas!");
+        }
+    }
+    public void supprimer_livraison(String id) throws SQLException{
+        if (find_livraison_in_list(id)> -1){
+            String query = "Delete from Livraison where id='"+id+"'";
+            int out = MDIParent.db_connection.execute_query_UD(query);
+            if (out >0){
+                livraisons.remove(find_livraison_in_list(id));
+                livraisons=Livraison.get_all_livraison(MDIParent.db_connection);
+                jTable1.setModel(remplir_jtable());
+                JOptionPane.showMessageDialog(null, "Livraison supprimer!");
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Aucun livraison n'a ete supprimer!");
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Cette id n'existe pas!");
+        }
+    }
+    public void exporter_data(){
+        JFrame parentComponent = new JFrame();
+        JFileChooser fileChooser= new JFileChooser();
+        // Some init code, if you need one, like setting title
+        int returnVal = fileChooser.showOpenDialog(parentComponent);
+        //ask the user for an input in a little message box
+        if ( returnVal == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date date = new Date();
+            Livraison.export_pdf(fileToSave, Login_Interface.user_logged_in.name +  " " + Login_Interface.user_logged_in.last_name ,  "Exportation des donnees | DATE " + formatter.format(date),livraisons);
+        }
+    }
+
+    static boolean search = false;
+    public static void chercher_livraison(String id) throws SQLException {
+
+        int output = find_livraison_in_list(id);
+        if (!search){
+            search = true;
+            jButton4.setText("X");
+            if (output!=-1){
+                //empty the table in the interface
+                model.setRowCount(0);
+                model.addRow(new Object[]{livraisons.get(output).id,livraisons.get(output).code_livraison,livraisons.get(output).fourniseur.nom,livraisons.get(output).produit.libelle});
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Cette id n'existe pas!");
+            }
+            return;
+        }
+        else{
+            jButton4.setText("Recherche");
+            model.setRowCount(0);
+            jTable1.setModel(remplir_jtable());
+
+            search =false;
+        }
+    }
+
     // Variables declaration - do not modify
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private static javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -389,7 +607,7 @@ public class Livraison_interface extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private static javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration

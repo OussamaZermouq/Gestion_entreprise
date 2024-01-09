@@ -7,10 +7,6 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.HorizontalAlignment;
-import com.sun.jdi.connect.spi.Connection;
-import org.example.Interfaces.MDIParent;
-import org.example.Interfaces.Product_interface;
-import org.example.Interfaces.Stock_interface;
 
 import java.io.File;
 import java.io.IOException;

@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static org.example.Interfaces.MDIParent.db_connection;
 import static org.example.Model.Stock.get_stock_by_id;
 
 public class Product {
@@ -74,6 +75,25 @@ public class Product {
         this.prix = prix;
         this.description = description;
         this.stock = stock;
+    }
+
+    public static Product get_produit_by_id(String id) throws SQLException {
+        ArrayList<Product> products_list = get_all_products(db_connection);
+        for (Product p:products_list){
+            if (p.id.equals(id)){
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public static String get_product_id_by_name(String product_name, ArrayList<Product> products){
+        for (Product p : products){
+            if (p.libelle.equals(product_name)){
+                return p.id;
+            }
+        }
+        return null;
     }
 
     public static ArrayList<Product> get_all_products(DB_connection connection) throws SQLException {

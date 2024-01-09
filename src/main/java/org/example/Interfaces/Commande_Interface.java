@@ -414,6 +414,7 @@ public class Commande_Interface extends JInternalFrame {
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pack();
+        setClosable(true);
     }// </editor-fold>
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {

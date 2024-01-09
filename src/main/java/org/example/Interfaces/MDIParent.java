@@ -38,11 +38,7 @@ public class MDIParent extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         JLabel jLabel1 = new JLabel();
 
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         jDesktopPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -52,7 +48,7 @@ public class MDIParent extends javax.swing.JFrame {
                 jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jDesktopPane1Layout.createSequentialGroup()
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 12, Short.MAX_VALUE))
+                                .addGap(0, 0, 0))
         );
         jDesktopPane1Layout.setVerticalGroup(
                 jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,7 +126,6 @@ public class MDIParent extends javax.swing.JFrame {
             }
         });
         jMenu1.add(jMenuItem2);
-
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem3.setText("Stock");
         jMenu1.add(jMenuItem3);
@@ -174,13 +169,10 @@ public class MDIParent extends javax.swing.JFrame {
         });
 
         jMenuBar1.add(jMenu1);
-
         jMenu2.setText("Account");
-
         jMenu2.add(jMenuItem7);
         jMenuBar1.add(jMenu2);
         setJMenuBar(jMenuBar1);
-
         jMenuItem7.setText("Detail");
 
         jMenuItem7.addActionListener(new ActionListener() {
@@ -205,16 +197,12 @@ public class MDIParent extends javax.swing.JFrame {
                         .addComponent(jDesktopPane1)
         );
 
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        jLabel1.setBackground(Color.getColor("yellow"));
+        jLabel1.setSize(getSize());
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\oussa\\Documents\\Dev\\Java\\Gestion_entreprise_project\\src\\main\\java\\org\\example\\Interfaces\\Images\\BG.png")); // NOI18N
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\oussa\\Documents\\Dev\\Java\\Gestion_entreprise_project\\src\\main\\java\\org\\example\\Interfaces\\Images\\BG_proper_size_3.png")); // NOI18N
-        jLabel1.setText("jLabel1");
-
-        jLabel1.setMaximumSize(getSize());
-        jLabel1.setMinimumSize(getSize());
-        jLabel1.setPreferredSize(getSize());
         pack();
-
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         //own functions
     }// </editor-fold>
 
@@ -271,6 +259,7 @@ public class MDIParent extends javax.swing.JFrame {
         productInterface.setLocation(x, y);
         productInterface.setVisible(true);
         jDesktopPane1.add(productInterface);
+        productInterface.toFront();
 
         lock_unlock_menu(true);
     }
@@ -288,6 +277,8 @@ public class MDIParent extends javax.swing.JFrame {
         });
         clientInterface.setVisible(true);
         jDesktopPane1.add(clientInterface);
+        clientInterface.toFront();
+
 
         lock_unlock_menu(true);
 
@@ -308,6 +299,8 @@ public class MDIParent extends javax.swing.JFrame {
 
         livraisonInterface.setVisible(true);
         jDesktopPane1.add(livraisonInterface);
+        livraisonInterface.toFront();
+
         lock_unlock_menu(true);
     }
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
@@ -322,6 +315,8 @@ public class MDIParent extends javax.swing.JFrame {
         });
         commandeInterface.setVisible(true);
         jDesktopPane1.add(commandeInterface);
+        commandeInterface.toFront();
+
         lock_unlock_menu(true);
     }
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
@@ -342,12 +337,11 @@ public class MDIParent extends javax.swing.JFrame {
         userinterface.setLocation(x, y);
         userinterface.setVisible(true);
         jDesktopPane1.add(userinterface);
+        userinterface.toFront();
+
 
         lock_unlock_menu(true);
-
     }
-
-
 
     /**
      * @param args the command line arguments

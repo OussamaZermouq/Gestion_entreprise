@@ -14,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static org.example.Interfaces.MDIParent.db_connection;
+
 public class Fournisseur {
     public String id;
     public String nom;
@@ -90,8 +92,8 @@ public class Fournisseur {
     }
     public static ArrayList<Fournisseur> get_all_fournisseur(DB_connection connection) throws SQLException {
         ArrayList<Fournisseur> Fournisseur = new ArrayList<Fournisseur>();
-        int count = connection.execute_query("Select count(*) as number_of_Fournisseur from Fournisseur").getInt("number_of_Fournisseur");
-        ResultSet resultSet = connection.execute_query("Select * from Fournisseur");
+        int count = connection.execute_query("Select count(*) as number_of_Fournisseur from fournisseur").getInt("number_of_Fournisseur");
+        ResultSet resultSet = connection.execute_query("Select * from fournisseur");
         for (int i=0;i<count;i++){
             Fournisseur.add(new Fournisseur(resultSet.getString("id"),
                     resultSet.getString("nom"),
@@ -104,11 +106,28 @@ public class Fournisseur {
         }
         return Fournisseur;
     }
+
+    public static Fournisseur get_fournisseur_by_id(String id) throws SQLException {
+        ArrayList<Fournisseur> fournisseurs = get_all_fournisseur(db_connection);
+        for (Fournisseur f:fournisseurs){
+            if (f.id.equals(id)){
+                return f;
+            }
+        }
+        return null;
+    }
+
+    public static String get_fournisseur_id_by_name(String fournisseur_name, ArrayList<Fournisseur> fournisseurs){
+        for (Fournisseur f : fournisseurs){
+            if (f.nom.equals(fournisseur_name)){
+                return f.id;
+            }
+        }
+        return null;
+    }
     public static  void export_pdf(File file, String author, String title, ArrayList<Fournisseur> data){
         // Output PDF file
-
         try {
-
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDocument = new PdfDocument(writer);
             Document document = new Document(pdfDocument);

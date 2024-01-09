@@ -43,7 +43,7 @@ public class UserInterface extends JInternalFrame {
         jPasswordField2 = new javax.swing.JPasswordField();
         jPasswordField3 = new javax.swing.JPasswordField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(158, 42, 43));
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
@@ -244,8 +244,11 @@ public class UserInterface extends JInternalFrame {
         );
 
         fill_boxes();
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
         pack();
+
+        setClosable(true);
+
     }// </editor-fold>
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {

@@ -315,6 +315,7 @@ public class Stock_interface extends javax.swing.JInternalFrame {
                                 .addContainerGap())
         );
         pack();
+        setClosable(true);
     }// </editor-fold>
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {

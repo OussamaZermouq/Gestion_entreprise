@@ -403,6 +403,7 @@ public class Client_interface extends JInternalFrame {
         );
 
         pack();
+        setClosable(true);
     }// </editor-fold>
 
     private void jTextField8ActionPerformed(ActionEvent evt) {
