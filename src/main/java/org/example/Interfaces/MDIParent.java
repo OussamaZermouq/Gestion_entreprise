@@ -23,6 +23,10 @@ public class MDIParent extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
+        setTitle("Gestion d'entreprise | SESSION : "+Login_Interface.user_logged_in.username);
+
+        Image icon = Toolkit.getDefaultToolkit().getImage("C:\\Users\\oussa\\Documents\\Dev\\Java\\Gestion_entreprise_project\\src\\main\\java\\org\\example\\Interfaces\\Images\\logo_java.png");
+        setIconImage(icon);
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
 
@@ -134,7 +138,11 @@ public class MDIParent extends javax.swing.JFrame {
         jMenuItem4.setText("Depot");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
+                try {
+                    jMenuItem4ActionPerformed(evt);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jMenu1.add(jMenuItem4);
@@ -214,8 +222,17 @@ public class MDIParent extends javax.swing.JFrame {
                 lock_unlock_menu(false);
             }
         });
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension frameSize = stockInterface.getSize();
+
+        int x = (desktopSize.width - frameSize.width) / 2;
+        int y = (desktopSize.height - frameSize.height) / 2;
+
+        stockInterface.setLocation(x, y);
         stockInterface.setVisible(true);
         jDesktopPane1.add(stockInterface);
+        stockInterface.toFront();
+
 
         lock_unlock_menu(true);
     }
@@ -275,6 +292,14 @@ public class MDIParent extends javax.swing.JFrame {
 
             }
         });
+
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension frameSize = clientInterface.getSize();
+
+        int x = (desktopSize.width - frameSize.width) / 2;
+        int y = (desktopSize.height - frameSize.height) / 2;
+
+        clientInterface.setLocation(x, y);
         clientInterface.setVisible(true);
         jDesktopPane1.add(clientInterface);
         clientInterface.toFront();
@@ -284,8 +309,30 @@ public class MDIParent extends javax.swing.JFrame {
 
     }
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         // TODO add your handling code here:
+
+        Depot_interface depotInterface = new Depot_interface();
+        depotInterface.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosed(InternalFrameEvent e) {
+                lock_unlock_menu(false);
+            }
+        });
+
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension frameSize = depotInterface.getSize();
+
+        int x = (desktopSize.width - frameSize.width) / 2;
+        int y = (desktopSize.height - frameSize.height) / 2;
+
+        depotInterface.setLocation(x, y);
+
+        depotInterface.setVisible(true);
+        jDesktopPane1.add(depotInterface);
+        depotInterface.toFront();
+
+        lock_unlock_menu(true);
     }
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         // TODO add your handling code here:
@@ -296,6 +343,16 @@ public class MDIParent extends javax.swing.JFrame {
                 lock_unlock_menu(false);
             }
         });
+
+
+
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension frameSize = livraisonInterface.getSize();
+
+        int x = (desktopSize.width - frameSize.width) / 2;
+        int y = (desktopSize.height - frameSize.height) / 2;
+
+        livraisonInterface.setLocation(x, y);
 
         livraisonInterface.setVisible(true);
         jDesktopPane1.add(livraisonInterface);
@@ -313,6 +370,16 @@ public class MDIParent extends javax.swing.JFrame {
 
             }
         });
+
+
+
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension frameSize = commandeInterface.getSize();
+
+        int x = (desktopSize.width - frameSize.width) / 2;
+        int y = (desktopSize.height - frameSize.height) / 2;
+
+        commandeInterface.setLocation(x, y);
         commandeInterface.setVisible(true);
         jDesktopPane1.add(commandeInterface);
         commandeInterface.toFront();

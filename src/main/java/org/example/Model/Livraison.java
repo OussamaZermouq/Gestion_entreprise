@@ -49,23 +49,6 @@ public class Livraison {
         this.produit = produit;
     }
 
-//    public static void populateCombo1(JComboBox<String> j1) throws SQLException {
-//        try (Connection con = DB_connection.connect_to_db()) {
-//            String query = "SELECT libelle FROM products";
-//            try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
-//                ResultSet resultSet = preparedStatement.executeQuery();
-//
-//                // Clear existing items in the combo box
-//                j1.removeAllItems();
-//
-//                // Add items from the result set to the combo box
-//                while (resultSet.next()) {
-//                    String nom = resultSet.getString("libelle");
-//                    j1.addItem(nom);
-//                }
-//            }
-//        }
-//    }
 
 public static ArrayList<Livraison> get_all_livraison(DB_connection connection) throws SQLException {
     ArrayList<Livraison> livraisons = new ArrayList<Livraison>();
@@ -85,24 +68,6 @@ public static ArrayList<Livraison> get_all_livraison(DB_connection connection) t
     }
     return livraisons;
 }
-
-    public static void populateCombo2(JComboBox<String> j1) throws SQLException {
-        try (Connection con = DB_connection.connect_to_db()) {
-            String query = "SELECT nom FROM fournisseur";
-            try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                // Clear existing items in the combo box
-                j1.removeAllItems();
-
-                // Add items from the result set to the combo box
-                while (resultSet.next()) {
-                    String nom = resultSet.getString("nom");
-                    j1.addItem(nom);
-                }
-            }
-        }
-    }
 
     public static  void export_pdf(File file, String author, String title, ArrayList<Livraison> data){
         // Output PDF file

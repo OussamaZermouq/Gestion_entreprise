@@ -72,7 +72,7 @@ public class Commande_Interface extends JInternalFrame {
         jLabel6 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel3.setBackground(new java.awt.Color(158, 42, 43));
         jPanel3.setAlignmentX(0.0F);
@@ -415,6 +415,7 @@ public class Commande_Interface extends JInternalFrame {
         );
         pack();
         setClosable(true);
+
     }// </editor-fold>
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {

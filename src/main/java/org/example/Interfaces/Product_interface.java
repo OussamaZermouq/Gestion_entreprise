@@ -25,7 +25,7 @@ import static org.example.Model.Product.export_pdf;
 
 public class Product_interface extends JInternalFrame implements WindowListener {
 
-    public static DB_connection db_connection = new DB_connection();
+    public static DB_connection db_connection = MDIParent.db_connection;
     public static ArrayList<Product> products = remplir_list();
     public static boolean closed;
 

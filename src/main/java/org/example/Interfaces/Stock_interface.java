@@ -71,12 +71,11 @@ public class Stock_interface extends javax.swing.JInternalFrame {
         jLabel10 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel3.setBackground(new java.awt.Color(158, 42, 43));
         jPanel3.setAlignmentX(0.0F);
         jPanel3.setAlignmentY(0.0F);
-        jPanel3.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
         jPanel3.setPreferredSize(new java.awt.Dimension(800, 250));
 
         jTable2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -136,7 +135,6 @@ public class Stock_interface extends javax.swing.JInternalFrame {
         jPanel2.setBackground(new java.awt.Color(255, 243, 176));
         jPanel2.setAlignmentX(0.0F);
         jPanel2.setAlignmentY(0.0F);
-        jPanel2.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
         jPanel2.setPreferredSize(new java.awt.Dimension(800, 250));
 
         jLabel1.setPreferredSize(new java.awt.Dimension(50, 50));

@@ -16,7 +16,7 @@ import static org.example.Model.Client.export_pdf;
 import static org.example.Model.Client.get_all_client;
 
 public class Client_interface extends JInternalFrame {
-    public static DB_connection db_connection = new DB_connection();
+    public static DB_connection db_connection =MDIParent.db_connection;
     public static ArrayList<Client> clients = remplir_list();
     public static DefaultTableModel model = new DefaultTableModel();
 
@@ -71,7 +71,8 @@ public class Client_interface extends JInternalFrame {
         jButton6 = new JButton();
         jButton7 = new JButton();
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
 
         jPanel1.setBackground(new java.awt.Color(158, 42, 43));
         jPanel1.setForeground(new java.awt.Color(158, 42, 43));
@@ -403,6 +404,7 @@ public class Client_interface extends JInternalFrame {
         );
 
         pack();
+
         setClosable(true);
     }// </editor-fold>
 

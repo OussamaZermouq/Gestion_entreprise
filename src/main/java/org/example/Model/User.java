@@ -28,8 +28,6 @@ public class User {
 
     //database connection to be used in functions
     static DB_connection db = new DB_connection();
-
-
     public User(){
 
     }
